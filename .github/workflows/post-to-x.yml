@@ -23,16 +23,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Post to X
+        env:
+          REPO: ${{ github.repository }}
+          TITLE: ${{ inputs.release_title || github.event.release.name }}
+          NOTES: ${{ inputs.release_notes || github.event.release.body }}
+          TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
+          URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ inputs.release_tag || github.event.release.tag_name }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
         run: |
-          REPO="${{ github.repository }}"
-          TITLE="${{ inputs.release_title || github.event.release.name }}"
-          NOTES="${{ inputs.release_notes || github.event.release.body }}"
-          TAG="${{ inputs.release_tag || github.event.release.tag_name }}"
-          URL="https://github.com/$REPO/releases/tag/$TAG"
-
           echo "Posting to X.com..."
 
-          pip install requests-oauthlib
+          pip install requests-oauthlib --quiet
 
           python3 << 'EOF'
           import os
@@ -42,40 +46,45 @@ jobs:
           notes = os.environ['NOTES']
           title = os.environ['TITLE']
           url = os.environ['URL']
+          repo = os.environ['REPO']
+          project_name = repo.split('/')[-1]
 
-          def extract_version_updates(notes):
-              pattern = r'\*\*([^*]+):\*\s*\d+[\w.]*\s*->\s*\*\*(\d+[\w.]*)\*\*'
-              matches = re.findall(pattern, notes)
-              if not matches:
-                  pattern = r'\*\*([^*]+):\*\*.*?->\s*\*\*(\d+[\w.]*)\*\*'
-                  matches = re.findall(pattern, notes, re.DOTALL)
-              return matches
+          def extract_highlights(notes):
+              """Extract bullet points or first meaningful lines from release notes."""
+              lines = notes.strip().splitlines()
+              highlights = []
+              for line in lines:
+                  line = line.strip()
+                  # Pick lines that look like bullet points
+                  if line.startswith(('- ', '* ', '+ ', '• ')):
+                      clean = re.sub(r'^[-*+•]\s*', '', line)
+                      clean = re.sub(r'\*\*([^*]+)\*\*', r'\1', clean)  # strip bold
+                      if clean:
+                          highlights.append(clean)
+                  if len(highlights) >= 4:
+                      break
+              return highlights
 
-          def extract_supported_fw(notes):
-              match = re.search(r'\*\*Supported Firmware:\*\*\s*([^*\n]+)', notes)
-              if match:
-                  return match.group(1).strip()
-              return ""
+          highlights = extract_highlights(notes)
 
-          updates = extract_version_updates(notes)
-          fw = extract_supported_fw(notes)
+          tweet_lines = [f"{project_name} {title} is out!"]
 
-          tweet_lines = [f"New hekate-ext release: {title}"]
+          if highlights:
+              tweet_lines.append("\n".join(f"• {h}" for h in highlights))
 
-          if updates:
-              summary_parts = []
-              for name, ver in updates[:5]:
-                  short_name = name.replace(' English (Unofficial)', '').replace(' (Unofficial)', '')
-                  summary_parts.append(f"{short_name}: {ver}")
-              if summary_parts:
-                  tweet_lines.append(" | ".join(summary_parts))
+          download_line = f"Download: {url}"
+          body_text = "\n\n".join(tweet_lines)
 
-          if fw:
-              tweet_lines.append(f"FW: {fw}")
+          # Keep the release URL intact. X counts URLs as shortened links, but
+          # build safely so the visible post never loses the Download line.
+          separator = "\n\n"
+          max_body_len = 280 - len(separator) - len(download_line)
+          if len(body_text) > max_body_len:
+              body_text = body_text[:max(0, max_body_len - 3)].rstrip() + "..."
 
-          tweet_lines.append(f"Details: {url}")
+          tweet_text = f"{body_text}{separator}{download_line}"
 
-          tweet_text = "\n\n".join(tweet_lines)
+          print(f"Tweet preview:\n{tweet_text}\n")
 
           api_key = os.environ['X_API_KEY']
           api_secret = os.environ['X_API_KEY_SECRET']
@@ -102,11 +111,3 @@ jobs:
           print("Tweet posted successfully!")
           print(f"Tweet URL: https://x.com/user/status/{response.json()['data']['id']}")
           EOF
-        env:
-          NOTES: $NOTES
-          TITLE: $TITLE
-          URL: $URL
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
-          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
-          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
