@@ -769,7 +769,7 @@ int emummc_raw_derive_bis_keys()
 	u8 *cal0_buff = malloc(SZ_64K);
 
 	// Generate BIS keys.
-	if (hos_bis_keygen())
+	if (hos_bis_keygen_silent())
 		goto error;
 
 	// Read and decrypt CAL0 for validation of working BIS keys.

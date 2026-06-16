@@ -565,7 +565,7 @@ static void _hos_bis_print_key(u32 idx, u8 *key)
 	gfx_puts("\n");
 }
 
-int hos_bis_keygen()
+static int _hos_bis_keygen(bool print_keys)
 {
 	u32 keygen_rev = 0;
 	u32 console_key_slot = 15; // HOS_MKEY_VER_MAX. Only for Erista.
@@ -579,7 +579,8 @@ int hos_bis_keygen()
 	// We check unconditionally in order to support downgrades.
 	keygen_rev = fuse_read_odm_keygen_rev();
 
-	gfx_printf("Keygen rev: %d\n", keygen_rev);
+	if (print_keys)
+		gfx_printf("Keygen rev: %d\n", keygen_rev);
 
 	if (keygen_rev)
 	{
@@ -638,10 +639,13 @@ int hos_bis_keygen()
 	if (!h_cfg.t210b01)
 		_hos_validate_mkey();
 
-	// Print keys to console.
-	_hos_bis_print_key(0, bis_keys);
-	_hos_bis_print_key(1, bis_keys);
-	_hos_bis_print_key(2, bis_keys);
+	// Print keys to console only for interactive flows.
+	if (print_keys)
+	{
+		_hos_bis_print_key(0, bis_keys);
+		_hos_bis_print_key(1, bis_keys);
+		_hos_bis_print_key(2, bis_keys);
+	}
 
 	// Clear all AES tmp and bis keyslots.
 	for (u32 i = 0; i < 6; i++)
@@ -658,6 +662,16 @@ int hos_bis_keygen()
 	se_aes_key_set(5, bis_keys + (5 * SE_KEY_128_SIZE), SE_KEY_128_SIZE);
 
 	return 0;
+}
+
+int hos_bis_keygen()
+{
+	return _hos_bis_keygen(true);
+}
+
+int hos_bis_keygen_silent()
+{
+	return _hos_bis_keygen(false);
 }
 
 void hos_bis_keys_clear()

@@ -99,6 +99,7 @@ extern u8 *cal0_buf;
 void hos_eks_clear(u32 mkey);
 int  hos_keygen(pkg1_eks_t *eks, u32 mkey, tsec_ctxt_t *tsec_ctxt);
 int  hos_bis_keygen();
+int  hos_bis_keygen_silent();
 void hos_bis_keys_clear();
 int  hos_dump_cal0();
 
