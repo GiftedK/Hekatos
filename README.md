@@ -1,7 +1,13 @@
-# hekate - Nyx
+# Hekatos - Nyx
 
 ![Image of Hekate](https://user-images.githubusercontent.com/3665130/60391760-bc1e8c00-9afe-11e9-8b7a-b065873081b2.png)
 
+
+Unofficial fork of hekate by CTCaer with additional launch options and 4GB/8GB release packaging.
+
+Hekatos is not the official hekate project and is not affiliated with or endorsed by CTCaer. If you need upstream support, reproduce the issue on the official hekate release first.
+
+Repository: https://github.com/sthetix/Hekatos
 
 Custom Graphical Nintendo Switch bootloader, firmware patcher, tools, and many more.
 
@@ -10,7 +16,7 @@ Custom Graphical Nintendo Switch bootloader, firmware patcher, tools, and many m
 - [Features](#features)
 - [Bootloader folders and files](#bootloader-folders-and-files)
 - [Bootloader configuration](#bootloader-configuration)
-  * [hekate global Configuration keys/values](#hekate-global-configuration-keysvalues-when-entry-is-config)
+  * [Hekatos global Configuration keys/values](#hekatos-global-configuration-keysvalues-when-entry-is-config)
   * [Boot entry key/value combinations](#boot-entry-keyvalue-combinations)
   * [Boot entry key/value combinations for Exosphère](#boot-entry-keyvalue-combinations-for-exosphère)
   * [Payload storage](#payload-storage)
@@ -50,11 +56,11 @@ Custom Graphical Nintendo Switch bootloader, firmware patcher, tools, and many m
 |  \|__ background.bmp     | Nyx - Custom background. User provided.                               |
 |  \|__ icon_switch.bmp    | Nyx - Default icon for CFWs.                                          |
 |  \|__ icon_payload.bmp   | Nyx - Default icon for Payloads.                                      |
-| bootloader/sys/          | hekate and Nyx system modules folder. !Important!                     |
+| bootloader/sys/          | Hekatos and Nyx system modules folder. !Important!                    |
 |  \|__ emummc.kipm        | emuMMC KIP1 module.                                                   |
 |  \|__ libsys_lp0.bso     | LP0 (sleep mode) module.                                              |
 |  \|__ libsys_minerva.bso | Minerva Training Cell. Used for DRAM Frequency training.              |
-|  \|__ nyx.bin            | Nyx - hekate's GUI.                                                   |
+|  \|__ nyx.bin            | Nyx - Hekatos GUI.                                                    |
 |  \|__ res.pak            | Nyx resources package.                                                |
 |  \|__ thk.bin            | Atmosphère Tsec Hovi Keygen.                                          |
 |  \|__ /l4t/              | Folder with firmware relevant to L4T (Linux/Android).                 |
@@ -75,7 +81,7 @@ There are four possible type of entries. "**[ ]**": Boot entry, "**{ }**": Capti
 **You can find a template [Here](./res/hekate_ipl_template.ini)**
 
 
-### hekate Configuration keys/values (section *[config]*)
+### Hekatos Configuration keys/values (section *[config]*)
 
 Use `Options` in Nyx to edit the following configuration:
 

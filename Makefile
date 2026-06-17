@@ -185,7 +185,7 @@ $(TRACK_LDFLAGS): $(BUILDTDIR)
 -include $(OBJS:.o=.d)
 
 ################################################################################
-# hekate-ext release targets
+# Hekatos release targets
 ################################################################################
 
 .PHONY: release release-4gb release-8gb
@@ -197,23 +197,23 @@ release-4gb:
 	@$(MAKE) --no-print-directory DRAM_8GB=0
 	@mkdir -p release
 	$(eval VERSION := $(BLVERSION_MAJOR).$(BLVERSION_MINOR).$(BLVERSION_HOTFX))
-	@mkdir -p release/hekate-ext-$(VERSION)-4GB/bootloader/ini
-	@mkdir -p release/hekate-ext-$(VERSION)-4GB/bootloader/payloads
-	@mkdir -p release/hekate-ext-$(VERSION)-4GB/bootloader/res
-	@mkdir -p release/hekate-ext-$(VERSION)-4GB/bootloader/sys/l4t
-	@cp $(OUTPUTDIR)/$(TARGET)_4gb.bin release/hekate-ext-$(VERSION)-4GB/payload.bin
-	@cp $(OUTPUTDIR)/$(TARGET)_4gb.bin release/hekate-ext-$(VERSION)-4GB/bootloader/update.bin
-	@cp $(OUTPUTDIR)/nyx.bin release/hekate-ext-$(VERSION)-4GB/bootloader/sys/
-	@cp $(OUTPUTDIR)/libsys_lp0.bso release/hekate-ext-$(VERSION)-4GB/bootloader/sys/
-	@cp $(OUTPUTDIR)/libsys_minerva.bso release/hekate-ext-$(VERSION)-4GB/bootloader/sys/
-	@cp extras/res/*.bmp release/hekate-ext-$(VERSION)-4GB/bootloader/res/ 2>/dev/null || true
-	@cp extras/sys/emummc.kipm release/hekate-ext-$(VERSION)-4GB/bootloader/sys/ 2>/dev/null || true
-	@cp extras/sys/res.pak release/hekate-ext-$(VERSION)-4GB/bootloader/sys/ 2>/dev/null || true
-	@cp extras/sys/thk.bin release/hekate-ext-$(VERSION)-4GB/bootloader/sys/ 2>/dev/null || true
-	@cp extras/sys/l4t/*.bin release/hekate-ext-$(VERSION)-4GB/bootloader/sys/l4t/ 2>/dev/null || true
-	@cd release/hekate-ext-$(VERSION)-4GB && zip -r ../hekate-ext-$(VERSION)-4GB.zip . >/dev/null 2>&1 ; cd ../..
+	@mkdir -p release/Hekatos-$(VERSION)-4GB/bootloader/ini
+	@mkdir -p release/Hekatos-$(VERSION)-4GB/bootloader/payloads
+	@mkdir -p release/Hekatos-$(VERSION)-4GB/bootloader/res
+	@mkdir -p release/Hekatos-$(VERSION)-4GB/bootloader/sys/l4t
+	@cp $(OUTPUTDIR)/$(TARGET)_4gb.bin release/Hekatos-$(VERSION)-4GB/payload.bin
+	@cp $(OUTPUTDIR)/$(TARGET)_4gb.bin release/Hekatos-$(VERSION)-4GB/bootloader/update.bin
+	@cp $(OUTPUTDIR)/nyx.bin release/Hekatos-$(VERSION)-4GB/bootloader/sys/
+	@cp $(OUTPUTDIR)/libsys_lp0.bso release/Hekatos-$(VERSION)-4GB/bootloader/sys/
+	@cp $(OUTPUTDIR)/libsys_minerva.bso release/Hekatos-$(VERSION)-4GB/bootloader/sys/
+	@cp extras/res/*.bmp release/Hekatos-$(VERSION)-4GB/bootloader/res/ 2>/dev/null || true
+	@cp extras/sys/emummc.kipm release/Hekatos-$(VERSION)-4GB/bootloader/sys/ 2>/dev/null || true
+	@cp extras/sys/res.pak release/Hekatos-$(VERSION)-4GB/bootloader/sys/ 2>/dev/null || true
+	@cp extras/sys/thk.bin release/Hekatos-$(VERSION)-4GB/bootloader/sys/ 2>/dev/null || true
+	@cp extras/sys/l4t/*.bin release/Hekatos-$(VERSION)-4GB/bootloader/sys/l4t/ 2>/dev/null || true
+	@cd release/Hekatos-$(VERSION)-4GB && zip -r ../Hekatos-$(VERSION)-4GB.zip . >/dev/null 2>&1 ; cd ../..
 	@echo "--------------------------------------"
-	@echo "4GB release created: release/hekate-ext-$(VERSION)-4GB.zip"
+	@echo "4GB release created: release/Hekatos-$(VERSION)-4GB.zip"
 	@echo "--------------------------------------"
 
 # Build and zip 8GB release only
@@ -223,23 +223,23 @@ release-8gb:
 	@$(MAKE) --no-print-directory DRAM_8GB=1
 	@mkdir -p release
 	$(eval VERSION := $(BLVERSION_MAJOR).$(BLVERSION_MINOR).$(BLVERSION_HOTFX))
-	@mkdir -p release/hekate-ext-$(VERSION)-8GB/bootloader/ini
-	@mkdir -p release/hekate-ext-$(VERSION)-8GB/bootloader/payloads
-	@mkdir -p release/hekate-ext-$(VERSION)-8GB/bootloader/res
-	@mkdir -p release/hekate-ext-$(VERSION)-8GB/bootloader/sys/l4t
-	@cp $(OUTPUTDIR)/$(TARGET)_8gb.bin release/hekate-ext-$(VERSION)-8GB/payload.bin
-	@cp $(OUTPUTDIR)/$(TARGET)_8gb.bin release/hekate-ext-$(VERSION)-8GB/bootloader/update.bin
-	@cp $(OUTPUTDIR)/nyx.bin release/hekate-ext-$(VERSION)-8GB/bootloader/sys/
-	@cp $(OUTPUTDIR)/libsys_lp0.bso release/hekate-ext-$(VERSION)-8GB/bootloader/sys/
-	@cp $(OUTPUTDIR)/libsys_minerva.bso release/hekate-ext-$(VERSION)-8GB/bootloader/sys/
-	@cp extras/res/*.bmp release/hekate-ext-$(VERSION)-8GB/bootloader/res/ 2>/dev/null || true
-	@cp extras/sys/emummc.kipm release/hekate-ext-$(VERSION)-8GB/bootloader/sys/ 2>/dev/null || true
-	@cp extras/sys/res.pak release/hekate-ext-$(VERSION)-8GB/bootloader/sys/ 2>/dev/null || true
-	@cp extras/sys/thk.bin release/hekate-ext-$(VERSION)-8GB/bootloader/sys/ 2>/dev/null || true
-	@cp extras/sys/l4t/*.bin release/hekate-ext-$(VERSION)-8GB/bootloader/sys/l4t/ 2>/dev/null || true
-	@cd release/hekate-ext-$(VERSION)-8GB && zip -r ../hekate-ext-$(VERSION)-8GB.zip . >/dev/null 2>&1 ; cd ../..
+	@mkdir -p release/Hekatos-$(VERSION)-8GB/bootloader/ini
+	@mkdir -p release/Hekatos-$(VERSION)-8GB/bootloader/payloads
+	@mkdir -p release/Hekatos-$(VERSION)-8GB/bootloader/res
+	@mkdir -p release/Hekatos-$(VERSION)-8GB/bootloader/sys/l4t
+	@cp $(OUTPUTDIR)/$(TARGET)_8gb.bin release/Hekatos-$(VERSION)-8GB/payload.bin
+	@cp $(OUTPUTDIR)/$(TARGET)_8gb.bin release/Hekatos-$(VERSION)-8GB/bootloader/update.bin
+	@cp $(OUTPUTDIR)/nyx.bin release/Hekatos-$(VERSION)-8GB/bootloader/sys/
+	@cp $(OUTPUTDIR)/libsys_lp0.bso release/Hekatos-$(VERSION)-8GB/bootloader/sys/
+	@cp $(OUTPUTDIR)/libsys_minerva.bso release/Hekatos-$(VERSION)-8GB/bootloader/sys/
+	@cp extras/res/*.bmp release/Hekatos-$(VERSION)-8GB/bootloader/res/ 2>/dev/null || true
+	@cp extras/sys/emummc.kipm release/Hekatos-$(VERSION)-8GB/bootloader/sys/ 2>/dev/null || true
+	@cp extras/sys/res.pak release/Hekatos-$(VERSION)-8GB/bootloader/sys/ 2>/dev/null || true
+	@cp extras/sys/thk.bin release/Hekatos-$(VERSION)-8GB/bootloader/sys/ 2>/dev/null || true
+	@cp extras/sys/l4t/*.bin release/Hekatos-$(VERSION)-8GB/bootloader/sys/l4t/ 2>/dev/null || true
+	@cd release/Hekatos-$(VERSION)-8GB && zip -r ../Hekatos-$(VERSION)-8GB.zip . >/dev/null 2>&1 ; cd ../..
 	@echo "--------------------------------------"
-	@echo "8GB release created: release/hekate-ext-$(VERSION)-8GB.zip"
+	@echo "8GB release created: release/Hekatos-$(VERSION)-8GB.zip"
 	@echo "--------------------------------------"
 
 # Build both releases sequentially (deletes previous)

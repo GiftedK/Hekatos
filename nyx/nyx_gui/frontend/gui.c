@@ -2010,14 +2010,14 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	// Set brand label.
 	lv_obj_t *label_brand = lv_label_create(parent, NULL);
 	lv_label_set_recolor(label_brand, true);
-	s_printf(btn_colored_text, "%s%s", text_color, " hekate-ext#");
+	s_printf(btn_colored_text, "%s%s", text_color, " Hekatos#");
 	lv_label_set_text(label_brand, btn_colored_text);
 	lv_obj_set_pos(label_brand, 50, 48);
 
 	// Set tagline label.
 	lv_obj_t *label_tagline = lv_label_create(parent, NULL);
 	lv_obj_set_style(label_tagline, &hint_small_style_white);
-	lv_label_set_static_text(label_tagline, "THE UNOFFICIAL ALL IN ONE BOOTLOADER FOR ALL YOUR NEEDS");
+	lv_label_set_static_text(label_tagline, "THE UNOFFICIAL HEKATE FORK FOR ALL YOUR NEEDS");
 	lv_obj_set_pos(label_tagline, 50, 82);
 
 	static lv_style_t icons;
@@ -2410,7 +2410,7 @@ static void _nyx_main_menu(lv_theme_t * th)
 	// Add all tabs content.
 	char version[32];
 	char rel = (nyx_str->version >> 24) & 0xFF;
-	s_printf(version, "hekate-ext %s%d.%d.%d%c%c",
+	s_printf(version, "Hekatos %s%d.%d.%d%c%c",
 			 rel ? "v" : "", nyx_str->version & 0xFF, (nyx_str->version >> 8) & 0xFF, (nyx_str->version >> 16) & 0xFF, rel > 'a' ? rel : 0,
 			 (nyx_str->info_ex.rsvd_flags & RSVD_FLAG_DRAM_8GB) ? '*' : 0);
 	lv_obj_t *tab_about = lv_tabview_add_tab(tv, version);
