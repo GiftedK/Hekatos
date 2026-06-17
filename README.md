@@ -1,6 +1,6 @@
 # Hekatos - Nyx
 
-![Image of Hekate](https://user-images.githubusercontent.com/3665130/60391760-bc1e8c00-9afe-11e9-8b7a-b065873081b2.png)
+![Image of Hekatos](./images/preview.png)
 
 
 Unofficial fork of hekate by CTCaer with additional launch options and 4GB/8GB release packaging.
