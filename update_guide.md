@@ -54,6 +54,7 @@ If the script fails or you prefer manual control, follow the steps below.
 | 6 | `nyx/Makefile` | Add warmboot_tools and gui_warmboot objects |
 | 7 | `res/hekate_ipl_template.ini` | OFW boot entry |
 | 8 | `res/patches_template.ini` | Lockpick_RCM_Pro entry |
+| 9 | `bootloader/gfx/logos.c` | Built-in Hekatos boot logo |
 
 **IMPORTANT: Credits are NOT a file modification - always use original hekate credits!**
 
@@ -202,7 +203,100 @@ payload=Lockpick_RCM_Pro.bin
 
 ---
 
-### 9. `extras/sys/` - Official binary sys assets
+### 9. `bootloader/gfx/logos.c` - Built-in Hekatos boot logo
+
+Hekatos uses a custom built-in boot logo in `bootloader/gfx/logos.c`.
+
+Source artwork:
+```text
+bootlogo/bootlogo.bmp
+```
+
+Expected source format:
+```text
+68 x 192, 8bpp paletted grayscale BMP
+```
+
+Conversion rules:
+- Convert the BMP to a raw grayscale `u8 bootlogo[]` C array.
+- Preserve `BOOTLOGO_WIDTH 68`, `BOOTLOGO_HEIGHT 192`, and `BOOTLOGO_SIZE 13056`.
+- BMP rows are bottom-up unless the BMP height is negative.
+- Convert each pixel through the BMP palette, using `(R + G + B) / 3` as the grayscale byte.
+- Keep `render_static_bootlogo()` using:
+
+```c
+memcpy(logo_buf, bootlogo, BOOTLOGO_SIZE);
+```
+
+Do not restore the old built-in `bootlogo_blz[]` path unless intentionally reverting to compressed built-in artwork. `battery_icons_blz[]` still uses BLZ and should be left untouched.
+
+Reference conversion command:
+
+```powershell
+@'
+from pathlib import Path
+import struct
+
+root = Path(r'd:\Coding\Hekatos')
+bmp_path = root / 'bootlogo' / 'bootlogo.bmp'
+logos_path = root / 'bootloader' / 'gfx' / 'logos.c'
+
+data = bmp_path.read_bytes()
+if data[:2] != b'BM':
+    raise SystemExit('not a BMP file')
+pixel_offset = struct.unpack_from('<I', data, 10)[0]
+dib_size = struct.unpack_from('<I', data, 14)[0]
+width, height_signed, planes, bpp, compression, image_size, xppm, yppm, clr_used, clr_important = struct.unpack_from('<iiHHIIiiII', data, 18)
+if width != 68 or abs(height_signed) != 192 or bpp != 8 or compression != 0:
+    raise SystemExit(f'unsupported BMP: {width}x{height_signed}, {bpp}bpp, compression {compression}')
+
+height = abs(height_signed)
+palette_entries = clr_used or 256
+palette_start = 14 + dib_size
+palette = data[palette_start:palette_start + palette_entries * 4]
+row_stride = ((width * bpp + 31) // 32) * 4
+raw = data[pixel_offset:pixel_offset + row_stride * height]
+
+values = []
+for y in range(height):
+    src_y = y if height_signed < 0 else height - 1 - y
+    row = raw[src_y * row_stride:src_y * row_stride + width]
+    for idx in row:
+        b, g, r, _ = palette[idx * 4:idx * 4 + 4]
+        values.append((int(r) + int(g) + int(b)) // 3)
+
+lines = []
+for i in range(0, len(values), 16):
+    chunk = values[i:i + 16]
+    lines.append('\t' + ', '.join(f'0x{x:02X}' for x in chunk) + ',')
+
+text = logos_path.read_text(encoding='utf-8')
+start = text.index('u8 bootlogo[] = {')
+body_start = text.index('\n', start) + 1
+end = text.index('\n};', body_start)
+logos_path.write_text(text[:body_start] + '\n'.join(lines) + text[end:], encoding='utf-8', newline='')
+print(f'Converted {bmp_path.name}: {width}x{height}, {len(values)} bytes')
+'@ | python -
+```
+
+After conversion, verify the array length:
+
+```powershell
+@'
+from pathlib import Path
+import re
+text = Path('bootloader/gfx/logos.c').read_text()
+body = re.search(r'u8 bootlogo\[\] = \{(.*?)\n\};', text, re.S).group(1)
+print(len(re.findall(r'0x[0-9A-Fa-f]{2}', body)))
+'@ | python -
+```
+
+Expected output:
+```text
+13056
+```
+
+### 10. `extras/sys/` - Official binary sys assets
 
 Update bundled binary assets from the matching official hekate release package, especially:
 
