@@ -184,11 +184,11 @@ wb_extract_error_t extract_warmboot_from_pkg1(warmboot_info_t *wb_info) {
 	// Mkey 12: fuses=16 (13.2.1, overriding fuses=15 from 13.0.0-13.2.0).
 	// Mkey 13-16: one fuses per mkey (latest in range).
 	// Mkey 17: shares fuses=19 with mkey 16.
-	// Mkey 18-21: one fuses per mkey.
+	// Mkey 18-22: one fuses per mkey.
 	static const u8 mkey_to_fuses[] = {
 		1,  3,  4,  5,  6,  7,  8,  9, 10, 11,  // 0-9:  {1,3,4,5,6,7,8,9,10,11}
 		14, 15, 16, 16, 17, 18, 19, 19, 20, 21,  // 10-19: {14,15,16,16,17,18,19,19,20,21}
-		22, 23                                  // 20-21: {22,23}
+		22, 23, 24                              // 20-22: {22,23,24}
 	};
 	u8 fuses_fw = 0;
 	if (pkg1_id->mkey < sizeof(mkey_to_fuses))
